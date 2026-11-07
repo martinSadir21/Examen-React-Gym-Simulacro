@@ -10,8 +10,11 @@
  * 3. Mostramos las etiquetas JSX asociadas al componente `ClaseDetails`.
  */
 
+// issue 4.1 Analizar el codigo este
+
 document.addEventListener("DOMContentLoaded", () => {
     // En Vanilla JS leemos los parámetros desde window.location.search
+    // issue 4.1 useParams():
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
 
@@ -32,10 +35,10 @@ async function fetchClaseDetails(id) {
     const container = document.getElementById("clase-details-container");
 
     try {
-        const res = await fetch(`/api/clases/${id}`);
+        const res = await fetch(`/api/clases/${id}`); // Issue 4.1 hook nuevo: useClase.js (este en singular)
         if (!res.ok) {
             if (res.status === 404) {
-                 window.location.href = '/404.html';
+                 window.location.href = '/404.html'; // Issue 4.1 mostrar <NotFoundPage />
                  return;
             }
             throw new Error("Error en la respuesta del servidor");
@@ -60,6 +63,8 @@ async function fetchClaseDetails(id) {
  * Muestra el contenido del detalle de la clase en el HTML.
  * En React: se hace escribiendo los valores de `{clase.variable}` directamente en el return().
  */
+
+// issue 4.1 jsx de ClaseDetailPAge.jsx
 function renderClase(clase) {
     const container = document.getElementById("clase-details-container");
 
@@ -68,6 +73,7 @@ function renderClase(clase) {
     const equipamientoHtml = clase.equipamiento.map(e => `<li>${e}</li>`).join("");
     const beneficiosHtml = clase.beneficios.map(b => `<li>${b}</li>`).join("");
 
+    // issue 4.4 traducir:
     container.innerHTML = `
         <div class="clase-details">
             <div class="clase-header">
@@ -143,3 +149,5 @@ function renderClase(clase) {
         </div>
     `;
 }
+
+// ir a issue 4.2 crear hooks/useClase.js (nuevo, en singular)

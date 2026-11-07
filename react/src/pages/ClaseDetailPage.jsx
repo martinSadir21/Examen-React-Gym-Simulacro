@@ -1,82 +1,109 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+// issue 4.3 armar con la misma formula que home pedir datos, if de carga y error, dibujar
 
-// Página de detalle de un videojuego.
-//
-// MUY IMPORTANTE :
-// - Aquí solo se deja la estructura de estados y el esqueleto visual.
-// - Toda la lógica de:
-//    * Llamar a la API para obtener el detalle (`/api/videojuegos/:id`),
-//    * Llamar a la API para obtener todas las plataformas y deducir la del juego,
-//    * Manejar estados de carga, error y juego no encontrado.
-//
-// Pista:
-// - Inspírate en `juego.html` y `js/juego.js` de la versión vanilla.
+import { Link, useParams } from "react-router-dom";
+import { useClase } from "../hooks/useClase.js";
+import { Loader } from "../components/Loader.jsx";
+import { ErrorMessage } from "../components/ErrorMessage.jsx";
+import { NotFoundPage } from "./NotFoundPage.jsx";
 
 export function ClaseDetailPage() {
-  const { id } = useParams();
-  const [game, setGame] = useState(null);
-  const [platform, setPlatform] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { id } = useParams(); // el :id de la URL
+  const { clase, loading, error, notFound } = useClase(id); // el hook
 
-  useEffect(() => {
-    // TODO:
-    // - Usar aquí tu helper de API para:
-    //   1) Obtener el juego por id.
-    //   2) Obtener todos los juegos y deducir a qué plataforma pertenece.
-    // - Actualizar `game`, `platform`, `loading` y `error` según corresponda.
-    console.warn(
-      "TODO: implementar carga de detalle de videojuego en GameDetailPage",
-    );
-  }, [id]);
+  if (loading) return <Loader />;
+  if (notFound) return <NotFoundPage />; // ← nuevo: reutilizo el 404
+  if (error) return <ErrorMessage />;
 
   return (
-    <section>
-      <h1>Detalle de videojuego (React)</h1>
-      <p>
-        Página de detalle para el juego con id: <strong>{id}</strong>
-      </p>
+    <div className="clase-page-container">
+      <Link to="/" className="back-btn">
+        ⬅ Volver al catálogo
+      </Link>
+      {/* Issue 4.4 traducir renderClase() aca abajo: */}
+      <div className="clase-details">
+        <div className="clase-header">
+          <h2>{clase.nombre}</h2>
+          <p className="instructor">👨‍🏫 Instructor: {clase.instructor}</p>
+        </div>
 
-      {/* TODO:
-          - Sustituir este bloque por una versión completa que muestre:
-            * Imagen del juego.
-            * Desarrollador, año, género, calificación.
-            * Plataforma deducida.
-            * Requisitos del sistema.
-            * Modos de juego.
-            * Características.
-            * DLCs incluidos (si los hay).
-          - Manejar visualmente los casos de:
-            * loading === true
-            * error !== null
-            * game === null (juego no encontrado)
-      */}
+        <div className="clase-body">
+          <div>
+            <img
+              src={clase.imagen}
+              alt={clase.nombre}
+              className="clase-image"
+            />
 
-      <pre
-        style={{
-          marginTop: "1.5rem",
-          padding: "1rem",
-          background: "rgba(0,0,0,0.4)",
-        }}
-      >
-        <code>
-          {`// Ejemplo de estructura de datos esperada (simplificada):
-// {
-//   "id": 1,
-//   "nombre": "Juego X",
-//   "desarrollador": "Estudio Y",
-//   "año": 2023,
-//   "genero": "Acción",
-//   "calificacion": 9,
-//   "descripcion": "...",
-//   "requisitos_sistema": { ... },
-//   "modos_juego": ["Singleplayer", "Multiplayer"],
-//   "caracteristicas": ["...", "..."],
-//   "dlcs_incluidos": [ ... ]
-// }`}
-        </code>
-      </pre>
-    </section>
+            <div className="clase-meta">
+              <div className="meta-item">
+                <strong>⏱️ Duración</strong>
+                <span>{clase.duracion} min</span>
+              </div>
+              <div className="meta-item">
+                <strong>📈 Nivel</strong>
+                <span>{clase.nivel}</span>
+              </div>
+              <div className="meta-item">
+                <strong>🔥 Calorías</strong>
+                <span>{clase.calorias_quemadas}</span>
+              </div>
+            </div>
+
+            <div className="beer-section">
+              <h3>🍺 CERVEZA INCLUIDA</h3>
+              <div className="beer-details">
+                <div className="beer-detail-item">
+                  <strong>Nombre:</strong>
+                  <span>{clase.birra_incluida.nombre}</span>
+                </div>
+                <div className="beer-detail-item">
+                  <strong>Tipo:</strong>
+                  <span>{clase.birra_incluida.tipo}</span>
+                </div>
+                <div className="beer-detail-item">
+                  <strong>Graduación:</strong>
+                  <span>{clase.birra_incluida.graduacion}</span>
+                </div>
+                <div className="beer-detail-item">
+                  <strong>Origen:</strong>
+                  <span>{clase.birra_incluida.origen}</span>
+                </div>
+              </div>
+              <div className="beer-description">
+                {clase.birra_incluida.descripcion}
+              </div>
+            </div>
+          </div>
+
+          <div className="clase-info">
+            <h3>📄 Descripción</h3>
+            <p>{clase.resumen}</p>
+
+            <h3>🕒 Horarios Disponibles</h3>
+            <ul className="horarios-list">
+              {clase.horarios.map((horario) => (
+                <li key={horario}>{horario}</li>
+              ))}
+            </ul>
+
+            <h3>🏋️ Equipamiento Necesario</h3>
+            <ul className="equipamiento-list">
+              {clase.equipamiento.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+
+            <h3>🌟 Beneficios</h3>
+            <ul className="beneficios-list">
+              {clase.beneficios.map((beneficio) => (
+                <li key={beneficio}>{beneficio}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
+// ir a issue 4.4 Traducir renderClase() en js/clase.js

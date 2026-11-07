@@ -30,3 +30,5 @@ export function HomePage() {
     </div>
   );
 }
+
+// paso a issue 4.1 ir a js/clase.js
