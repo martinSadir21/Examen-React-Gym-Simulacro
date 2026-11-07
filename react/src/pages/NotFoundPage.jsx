@@ -1,4 +1,4 @@
-// Issue 1.4 traducir de 404.html a react
+// Issue 1.4 traducir de 404.html a react, Si el <body> trae <header>/<main>/<footer> → copiar SOLO lo de adentro del <main>
 
 import { Link } from "react-router-dom";
 

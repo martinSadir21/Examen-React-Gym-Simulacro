@@ -16,3 +16,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </React.StrictMode>,
 );
+
+// ir a Issue 1.3 en App.jsx

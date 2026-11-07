@@ -98,3 +98,5 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor Express escuchando en http://localhost:${PORT}`);
 });
+
+// una vez visto este server.js ir a Issue 1: pasar css/style.css a index.css
