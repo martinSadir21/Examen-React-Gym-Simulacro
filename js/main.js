@@ -19,10 +19,15 @@ const categorias = ['Cardio', 'Fuerza', 'Flexibilidad', 'Combate'].sort();
  * En React: se hace dentro de un `useEffect` usando un estado `useState` para
  * almacenar 'clases', 'loading' y 'error'.
  */
+
+/* Aca pide datos entonces esto va al hook  
+   ¿Qué muestra mientras carga y si falla? → eso va a Loader y ErrorMessage. Ese HTML lo copio y lo traduzco a JSX en Loader.jsx y ErrorMessage.jsx
+*/
 async function fetchClases() {
     const container = document.getElementById("categorias-container");
-    
+    // ¿Qué muestra mientras carga y si falla? → eso va a Loader y ErrorMessage. Ese HTML lo copio y lo traduzco a JSX en Loader.jsx y ErrorMessage.jsx
     // Mostramos estado de carga ("loading = true" en React)
+    // Loader.jsx:
     container.innerHTML = `
         <article class="container loading">
             <div class="loader"></div>
@@ -39,6 +44,7 @@ async function fetchClases() {
     } catch (error) {
         console.error(error);
         // Mostramos el componente de error ("error = true" en React)
+        // ErrorMessage.jsx
         container.innerHTML = `
             <div class="error">
                 <h1>🍻 La función está demorada</h1>
@@ -53,23 +59,26 @@ async function fetchClases() {
  * Renderiza el HTML iterando sobre las categorías y clases.
  * En React: se hace devolviendo un arreglo de map() dentro del return (JSX).
  */
+
+// ¿Qué se repite? → cada bucle se vuelve un componente.
 function renderCategorias(clases) {
     const container = document.getElementById("categorias-container");
     container.innerHTML = ""; // Limpiar el loading
 
-    categorias.forEach(cat => {
-        // En React esto sería el componente <CategoriaSection />
-        
+    categorias.forEach(cat => { // ← bucle de AFUERA: una vez por categoría
+        // En React esto sería el componente <CategoriaSection/>  va en el issue 3.4
         const htmlCategoria = document.createElement("article");
         htmlCategoria.className = "categoria";
-        
         let headerHtml = `<h2>🍺 ${cat}</h2><div class="clases-grid" id="grid-${cat}">`;
         
+        // esta parte no se traduce
         const clasesDeCategoria = clases.filter(clase => clase.categoria === cat);
         let cardsHtml = "";
 
-        clasesDeCategoria.forEach(c => {
+        // esta parte si se traduce
+        clasesDeCategoria.forEach(c => { // ← bucle de ADENTRO: una vez por clase
             // En React esto sería el componente <ClaseCard />, pasándole 'c' como props
+            // card a traducir para el issue 3.3
             cardsHtml += `
                 <div class="card">
                     <a href="/clase.html?id=${c.id}">
@@ -101,3 +110,5 @@ function renderCategorias(clases) {
         container.appendChild(htmlCategoria);
     });
 }
+
+// La lista de categorías y el filter van en HomePage.jsx (paso 3.6), que usa el hook y arma las secciones.

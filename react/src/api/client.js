@@ -17,3 +17,26 @@ export const API_BASE_URL = "http://localhost:3000/api";
 // Pista:
 // - Esta función se reutilizará en hooks como `useGames` y en el login.
 
+// issue 2 Crear funcion apiFetch (funcion generica fijarse puerto y ruta de API_BASE_URL)
+export async function apiFetch(path, options = {}) {
+  const { method = "GET", body } = options;
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  if (!response.ok) {
+  const data = await response.json().catch(() => ({}));
+  const error = new Error(data.error || data.message || `Error ${response.status}`);
+  error.status = response.status;
+  throw error;
+}
+
+  return response.json();
+}
+
+// ir a Issue 3 mirar js/main.js y desarmarlo en piezas de React
+// Tambien verificar que los nombres coincidan en hooks y components y ver si HomePage.jsx los importa
+// ir al primer hook en este caso useClases.jsx Issue 3.1

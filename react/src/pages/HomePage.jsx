@@ -1,57 +1,32 @@
-import { useGames } from "../hooks/useGames.js";
-import { GameCard } from "../components/GameCard.jsx";
+// issue 3.5
 
-const PLATFORMS = ["PC", "PlayStation", "Xbox", "Nintendo"];
+// traer lo que ya hice:
+import { useClases } from "../hooks/useClases.js";
+import { CategoriaSection } from "../components/CategoriaSection.jsx";
+import { Loader } from "../components/Loader.jsx";
+import { ErrorMessage } from "../components/ErrorMessage.jsx";
 
-// Página principal: catálogo de videojuegos agrupados por plataforma.
-// Inspírate en la lógica de js/app.js (versión vanilla).
+// copiarlo de main.js
+const CATEGORIAS = ["Cardio", "Fuerza", "Flexibilidad", "Combate"].sort();
 
 export function HomePage() {
-  const { gamesByPlatform, loading, error } = useGames();
+  // Lo que devuelve mi hook useClases:
+  const { clases, loading, error } = useClases();
 
-  if (loading) {
-    return (
-      <section className="status">
-        <h2>⏳ Cargando videojuegos...</h2>
-        <p>Estamos preparando tu catálogo gaming 🎮</p>
-      </section>
-    );
-  }
+  // siempre igual:
+  if (loading) return <Loader />;
+  if (error) return <ErrorMessage />;
 
-  if (error) {
-    return (
-      <section className="status">
-        <h2>⚠️ Error al cargar videojuegos</h2>
-        <p>{error.message}</p>
-      </section>
-    );
-  }
-
-  if (!gamesByPlatform || typeof gamesByPlatform !== "object") {
-    return (
-      <section className="status">
-        <h2>⚠️ Sin datos</h2>
-        <p>No se recibieron videojuegos desde la API.</p>
-      </section>
-    );
-  }
-
+  // El categorias.forEach(cat => ...) de main.js, convertido a .map():
   return (
-    <section>
-      <h1>Catálogo de videojuegos</h1>
-      <p>
-        Reimplementación en React de la aplicación GameHub. Los datos provienen de
-        la API Express.
-      </p>
-
-      {/* TODO:
-          - Revisa cómo se generan las secciones por plataforma en js/app.js.
-          - Aquí debes replicar esa idea usando JSX y el componente GameCard.
-      */}
-      <div className="grid-platforms">
-        
-      </div>
-    </section>
+    <div>
+      {CATEGORIAS.map((categoria) => (
+        <CategoriaSection
+          key={categoria}
+          categoria={categoria}
+          clases={clases.filter((clase) => clase.categoria === categoria)} // Copiado de main.js
+        />
+      ))}
+    </div>
   );
 }
-
