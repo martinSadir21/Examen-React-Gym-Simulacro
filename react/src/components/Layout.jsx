@@ -1,9 +1,7 @@
+// issue 6.2
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
-
-// Layout principal de la app.
-// Incluye cabecera, navegación básica y pie de página.
-// El login se integra en la cabecera usando el contexto de autenticación.
+import { LoginForm } from "./LoginForm.jsx"; // issue 6.2
 
 export function Layout({ children }) {
   const { user, logout } = useAuth();
@@ -11,55 +9,46 @@ export function Layout({ children }) {
   const currentYear = new Date().getFullYear();
 
   const handleLogout = () => {
-    // TODO:
-    // - Implementar correctamente el cierre de sesión usando:
-    //    * `logout()` del contexto de autenticación.
-    //    * Navegación a la ruta que consideres apropiada (por ejemplo "/").
-    console.warn(
-      "TODO: implementar handleLogout en Layout (logout + navegación)",
-    );
+    // issue 6.2:
+    logout();
+    navigate("/");
   };
 
   return (
-    <div className="app-shell">
+    <>
       <header>
-        <div className="brand">
-          <span className="brand-title">🎮 GAMEHUB</span>
-          <span className="brand-subtitle">
-            Tu catálogo de videojuegos definitivo
-          </span>
+        <div className="brand-container">
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <h1 className="logo-title">🍻💪 BIRRA Y BÍCEPS</h1>
+          </Link>
+          <p className="slogan">Porque la vida es equilibrio.</p>
         </div>
-        <nav className="layout-nav">
-          <Link to="/">Inicio</Link>
 
-          {/* TODO:
-              - Mostrar el nombre del usuario y su rol cuando esté logueado,
-                de forma similar a la versión vanilla (login.js).
-              - Integrar aquí el formulario/botón de login si decides no usar
-                un componente de página separado.
-          */}
+        <div className="login-container">
+          {/*ISsue 6.2 cambiar de null a LoginForm*/}
           {user ? (
-            <>
-              <span className="user-chip">
-                Bienvenido, {user.fullName} - {user.rol}
+            <div id="userInfo">
+              <span id="userNameDisplay">
+                Bienvenido, {user.firstName} - {user.rol}
               </span>
-              <button
-                className="btn-gaming btn-secondary"
-                onClick={handleLogout}
-              >
+              <button className="btn-quilmes-secondary" onClick={handleLogout}>
                 Cerrar sesión
               </button>
-            </>
-          ) : null}
-        </nav>
+            </div>
+          ) : (
+            <LoginForm />
+          )}
+        </div>
       </header>
+
       <main>{children}</main>
+
       <footer>
         <p>
-          🎮 GameHub React © {currentYear} - Examen de Migración a React | Juega
-          Responsable 🕹️
+          🍻 Birra y Bíceps © {currentYear} - Gimnasio con Actitud | Bebe con
+          Responsabilidad 🍺
         </p>
       </footer>
-    </div>
+    </>
   );
 }

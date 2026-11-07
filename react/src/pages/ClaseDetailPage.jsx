@@ -106,4 +106,4 @@ export function ClaseDetailPage() {
   );
 }
 
-// ir a issue 4.4 Traducir renderClase() en js/clase.js
+// ir a issue 5 Mirar js/auth.js

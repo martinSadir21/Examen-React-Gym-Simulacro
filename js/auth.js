@@ -1,3 +1,8 @@
+// issue 5 y 6: 
+// Guarda y lee el usuario en localStorage ("user" e "isLoggedIn")	AuthContext.jsx (paso 5)
+// El form: fetch('/api/login', { method: 'POST' ... })	LoginForm.jsx (paso 6)
+// Muestra “Bienvenido, ...” o el form, según esté logueado	Layout.jsx (paso 6)
+
 /**
  * auth.js
  * 
@@ -22,6 +27,7 @@ function renderAuthHeader() {
 
     if (isLoggedIn && currentUser) {
         // En React, este JSX estaría en el componente <LoggedCard />
+        // issue 6: Layout.jsx
         container.innerHTML = `
             <div id="userInfo">
                 <span id="userNameDisplay">Bienvenido, ${currentUser.firstName} - ${currentUser.rol}</span>
@@ -52,6 +58,7 @@ async function login(e) {
     const passwordInput = document.getElementById("password").value;
 
     try {
+        // issue 6: LoginForm.jsx
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: {
@@ -62,6 +69,7 @@ async function login(e) {
 
         if (response.ok) {
             const adminData = await response.json();
+            // issue 5 AuthContext.jsx
             // Actualizamos la "store" local
             currentUser = adminData;
             isLoggedIn = true;
@@ -97,3 +105,5 @@ function logout() {
 document.addEventListener("DOMContentLoaded", () => {
     renderAuthHeader();
 });
+
+// ir a hacer issue 5: context/AuthContext.jsx

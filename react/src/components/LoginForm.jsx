@@ -1,5 +1,7 @@
+// issue 6.1: 
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth.js";
+import { apiFetch } from "../api/client.js"; // issue 6.1
 
 // Componente de formulario de login.
 //
@@ -17,7 +19,7 @@ export function LoginForm() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => { // issue 6.1 agregar async
     event.preventDefault();
     setError(null);
     setLoading(true);
@@ -28,17 +30,27 @@ export function LoginForm() {
     // - Si las credenciales son correctas, llamar a `login(...)` del contexto.
     // - Si no, mostrar un mensaje de error adecuado en `setError(...)`.
     // - Al finalizar, volver a poner `loading` en false.
-    console.warn(
-      "TODO: implementar lógica de login (llamadas a API y uso de AuthContext)",
-    );
-    setLoading(false);
+
+    // issue 6.1:
+    try {
+      const adminData = await apiFetch("/login", {
+        method: "POST",
+        body: { username, password },
+      });
+      login(adminData);
+    } catch (err) {
+      setError(
+        err.status === 401
+          ? "🍺 Usuario o contraseña incorrectos"
+          : "Error de red. Intentá de nuevo.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-    >
+    <form id="loginForm" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Usuario"
@@ -53,15 +65,13 @@ export function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit" className="btn-gaming" disabled={loading}>
+      <button type="submit" className="btn-quilmes" disabled={loading}>
         {loading ? "Ingresando..." : "Ingresar"}
       </button>
-      {error && (
-        <p style={{ marginTop: "0.25rem", color: "#ffb3b3", fontSize: "0.8rem" }}>
-          {error.message}
-        </p>
-      )}
+      {error && <p style={{ color: "#ffb3b3", margin: 0 }}>{error}</p>}
     </form>
   );
 }
+
+// ir a issue 6.2 components/Layout.jsx
 
