@@ -1,30 +1,24 @@
+// Issue 1.3 Agregar route
+
+import { Routes, Route } from "react-router-dom"; // Issue 1.3
 import { Layout } from "./components/Layout.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
 import { ClaseDetailPage } from "./pages/ClaseDetailPage.jsx";
+import { NotFoundPage } from "./pages/NotFoundPage.jsx"; // Issue 1.3
 
 // Componente raíz de la SPA.
 // AQUÍ debes definir las rutas principales usando React Router.
+// Issue 1.3
 export default function App() {
   return (
     <Layout>
-        {/*
-          Ejemplo :
-
-          // 1) Ruta principal de catálogo:
-          //    - path: "/"
-          //    - componente: HomePage
-          //
-          // 2) Ruta de detalle de clase:
-          //    - path: "/clases/:id"
-          //    - componente: ClaseDetailPage
-          //
-          // 3) Ruta comodín para 404:
-          //    - path: "*"
-          //    - componente: página de "no encontrado"
-
-          Sustituye este comentario por tu propia configuración de rutas.
-        */}
+        <Routes>
+          <Route path="/" element={<HomePage/>} />
+          <Route path="/clases/:id" element={<ClaseDetailPage/>} />
+          <Route path="*" element={<NotFoundPage/>} />
+        </Routes>
     </Layout>
   );
 }
+// ir a Issue 1.4 Crear pagina 404 NotFoundPage en pages/
 

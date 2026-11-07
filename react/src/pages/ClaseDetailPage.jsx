@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 // Pista:
 // - Inspírate en `juego.html` y `js/juego.js` de la versión vanilla.
 
-export function GameDetailPage() {
+export function ClaseDetailPage() {
   const { id } = useParams();
   const [game, setGame] = useState(null);
   const [platform, setPlatform] = useState(null);
